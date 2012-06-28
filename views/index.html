@@ -75,7 +75,8 @@ $(function(){
     })
     var selStatus = {
         selected : false,
-        id : 1
+        id : 1,
+        type : null
     }
 
     //棋子相关数据
@@ -137,8 +138,17 @@ $(function(){
         var posit = this.options,
             size = po.common.size;
         var img = this.type + "_" + this.name +".png";
-        var piece = paper.image("../images/" + img, posit.x, posit.y, size.width, size.height).attr(po.common.style);
+        var piece = paper.image("../images/" + img, posit.x, posit.y, size.width, size.height).attr(po.common.style).data("type",this.type);;
         piece.node.onclick = function(e){
+            if( (selStatus.type != null) && (piece.data("type") != selStatus.type) ){
+                paper.getById(selStatus.id).attr({
+                    x : piece.attrs.x,
+                    y : piece.attrs.y
+                }).toFront();
+                piece.remove();
+                resetSelStatus();
+                return;
+            }
             if( (!selStatus.selected && selStatus.id != piece.id) || (selStatus.selected && selStatus.id != piece.id) ){
                 selectRect.attr({
                     x : piece.attrs.x,
@@ -160,19 +170,13 @@ $(function(){
                 })
                 selStatus.selected = true;
                 selStatus.id = piece.id;
+                selStatus.type = piece.data("type");
                 return;
             }
-            selectRect.attr({
-                "stroke-opacity" : 0
-            });
-            selStatus.selected = false;
-            selStatus.id = 1;
-            mouseMoveRect.attr({
-                "stroke-opacity" : 0
-            })
+            resetSelStatus();
             $(map.node).unbind();
         }
-        piece.node.onmousemove = function(){
+        piece.node.onmouseover = function(){
             if(selStatus.selected){
                 mouseMoveRect.attr({
                     x : piece.attrs.x,
@@ -183,6 +187,18 @@ $(function(){
             }
         }
         return piece;
+    }
+
+    function resetSelStatus(){
+        selectRect.attr({
+            "stroke-opacity" : 0
+        });
+        mouseMoveRect.attr({
+            "stroke-opacity" : 0
+        })
+        selStatus.selected = false;
+        selStatus.id = 1;
+        selStatus.type = null;
     }
 
     var bzua = new Pieces("black", "zu", po.black.zua).create();
@@ -218,5 +234,6 @@ $(function(){
     var rshil = new Pieces("red", "shi", po.red.shil).create();
     var rshir = new Pieces("red", "shi", po.red.shir).create();
     var rshuai = new Pieces("red", "shuai", po.red.shuai).create();
+
 })
 </script>
