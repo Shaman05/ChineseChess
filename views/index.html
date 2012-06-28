@@ -4,20 +4,25 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>中国象棋 - Chinese Chess</title>
     <style type="text/css">
-        .block{height: 30px; width: 30px; border: 2px solid #000000; float: left; margin: 0 20px 20px 0}
-        #a1{background: green}
-        #a2{background: red}
+        body{margin: 0; background: #d1bf9a}
+        .map,.tipwrap{height: 660px; position: absolute; top: 50%; left: 50%; margin-top: -330px}
+        .map{width: 654px; margin-left: -327px;}
+        .tipwrap{width: 200px; margin-left: 327px; box-shadow: 0 0 10px #000 inset}
+        .tipbox{padding: 10px}
     </style>
 </head>
 
 <body>
-    <div id="map">
-        <div class="block" id="a1"></div>
-        <div class="block" id="a2"></div>
+    <div class="map" id="map"></div>
+    <div class="tipwrap">
+        <div class="tipbox">
+            dsaf
+        </div>
     </div>
 </body>
 </html>
 <script type="text/javascript" src="/javascripts/jquery.js"></script>
+<script type="text/javascript" src="/javascripts/raphael-min.js"></script>
 <script type="text/javascript" src="/socket.io/socket.io.js"></script>
 <script type="text/javascript">
 $(function(){
@@ -38,5 +43,101 @@ $(function(){
             console.log("disconnect!")
         })
     })
+
+    //偏移量
+    var offset = {
+        dx : 50,
+        dy : 20
+    };
+    var baseLeft = offset.dx + 15;
+    var baseTop = offset.dy + 16;
+
+    var paper = Raphael("map", 654, 660);
+    var map = paper.image("../images/chessMap.jpg", offset.dx, offset.dy, 554, 620);
+    var selectRect = paper.rect(0, 0, 62, 62).attr({
+        "cursor" : "pointer",
+        "stroke" : "red",
+        "stroke-width" : 1,
+        "stroke-opacity" : 0
+    });
+    var mouseMoveRect = paper.rect(0, 0, 62, 62).attr({
+        "stroke" : "red",
+        "stroke-width" : 1,
+        "stroke-dasharray" : "- ",
+        "stroke-opacity" : 0
+    })
+    var selStatus = {
+        selected : false,
+        id : 1
+    }
+
+    //棋子相关数据
+    var po = {};
+    po.common = {
+        size : {
+            width : 62,
+            height : 62
+        },
+        style : {
+            "cursor" : "pointer"
+        }
+    }
+    po.black = {
+        chel : {
+            x : baseLeft - po.common.size.width/2,
+            y : baseTop - po.common.size.height/2
+        },
+        cher : {
+            x : baseLeft - po.common.size.width/2 + 65*8,
+            y : baseTop - po.common.size.height/2
+        }
+    }
+    po.red = {
+        shuai : {
+            x : baseLeft - po.common.size.width/2 + 65*4,
+            y : baseTop - po.common.size.height/2 + 65*9
+        }
+    }
+
+    function Pieces(type,name,options){
+        this.type = type;
+        this.name = name;
+        this.options = options;
+    }
+
+    Pieces.prototype.create = function(){
+        var posit = this.options,
+            size = po.common.size;
+        var img = this.type + "_" + this.name +".png";
+        var piece = paper.image("../images/" + img, posit.x, posit.y, size.width, size.height).attr(po.common.style);
+        piece.node.onclick = function(e){
+            if( (!selStatus.selected && selStatus.id != piece.id) || (selStatus.selected && selStatus.id != piece.id) ){
+                selectRect.attr({
+                    x : piece.attrs.x,
+                    y : piece.attrs.y,
+                    "stroke-opacity" : 1
+                });
+                mouseMoveRect.attr({
+                    "stroke-opacity" : 1
+                })
+                selStatus.selected = true;
+                selStatus.id = piece.id;
+                return;
+            }
+            selectRect.attr({
+                "stroke-opacity" : 0
+            });
+            selStatus.selected = false;
+            selStatus.id = 1;
+            mouseMoveRect.attr({
+                "stroke-opacity" : 0
+            })
+        }
+        return piece;
+    }
+
+    var bchel = new Pieces("black", "che", po.black.chel).create();
+    var bcher = new Pieces("black", "che", po.black.cher).create();
+    var rshuai = new Pieces("red", "shuai", po.red.shuai).create();
 })
 </script>
