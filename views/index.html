@@ -5,10 +5,12 @@
     <title>中国象棋 - Chinese Chess</title>
     <style type="text/css">
         body{margin: 0; background: #d1bf9a}
-        .map,.tipwrap{height: 660px; position: absolute; top: 50%; left: 50%; margin-top: -330px}
-        .map{width: 654px; margin-left: -327px;}
-        .tipwrap{width: 200px; margin-left: 327px; box-shadow: 0 0 10px #000 inset}
+        .map,.tipwrap{position: absolute; top: 50%; left: 50%}
+        .map{width: 654px; height: 660px; margin: -330px 0 0 -327px;}
+        .tipwrap{width: 200px; height:400px; margin: -200px 0 0 327px; box-shadow: 0 0 10px #000 inset}
         .tipbox{padding: 10px}
+        .txt{height: 190px; padding:0 6px}
+        .txt h3{margin: 0; font-size:16px}
     </style>
 </head>
 
@@ -16,7 +18,12 @@
     <div class="map" id="map"></div>
     <div class="tipwrap">
         <div class="tipbox">
-            dsaf
+            <div id="balck" class="txt">
+                <h3>黑方:</h3>
+            </div>
+            <div id="red" class="txt">
+                <h3>红方:</h3>
+            </div>
         </div>
     </div>
 </body>
@@ -83,20 +90,40 @@ $(function(){
         }
     }
     po.black = {
-        chel : {
-            x : baseLeft - po.common.size.width/2,
-            y : baseTop - po.common.size.height/2
-        },
-        cher : {
-            x : baseLeft - po.common.size.width/2 + 65*8,
-            y : baseTop - po.common.size.height/2
-        }
+        zua    : {x : baseLeft - po.common.size.width/2 + 65*0, y : baseTop - po.common.size.height/2 + 65*3},
+        zub    : {x : baseLeft - po.common.size.width/2 + 65*2, y : baseTop - po.common.size.height/2 + 65*3},
+        zuc    : {x : baseLeft - po.common.size.width/2 + 65*4, y : baseTop - po.common.size.height/2 + 65*3},
+        zud    : {x : baseLeft - po.common.size.width/2 + 65*6, y : baseTop - po.common.size.height/2 + 65*3},
+        zue    : {x : baseLeft - po.common.size.width/2 + 65*8, y : baseTop - po.common.size.height/2 + 65*3},
+        paol   : {x : baseLeft - po.common.size.width/2 + 65*1, y : baseTop - po.common.size.height/2 + 65*2},
+        paor   : {x : baseLeft - po.common.size.width/2 + 65*7, y : baseTop - po.common.size.height/2 + 65*2},
+        chel   : {x : baseLeft - po.common.size.width/2 + 65*0, y : baseTop - po.common.size.height/2 + 65*0},
+        cher   : {x : baseLeft - po.common.size.width/2 + 65*8, y : baseTop - po.common.size.height/2 + 65*0},
+        mal    : {x : baseLeft - po.common.size.width/2 + 65*1, y : baseTop - po.common.size.height/2 + 65*0},
+        mar    : {x : baseLeft - po.common.size.width/2 + 65*7, y : baseTop - po.common.size.height/2 + 65*0},
+        xiangl : {x : baseLeft - po.common.size.width/2 + 65*2, y : baseTop - po.common.size.height/2 + 65*0},
+        xiangr : {x : baseLeft - po.common.size.width/2 + 65*6, y : baseTop - po.common.size.height/2 + 65*0},
+        shil   : {x : baseLeft - po.common.size.width/2 + 65*3, y : baseTop - po.common.size.height/2 + 65*0},
+        shir   : {x : baseLeft - po.common.size.width/2 + 65*5, y : baseTop - po.common.size.height/2 + 65*0},
+        jiang  : {x : baseLeft - po.common.size.width/2 + 65*4, y : baseTop - po.common.size.height/2 + 65*0}
     }
     po.red = {
-        shuai : {
-            x : baseLeft - po.common.size.width/2 + 65*4,
-            y : baseTop - po.common.size.height/2 + 65*9
-        }
+        binga  : {x : baseLeft - po.common.size.width/2 + 65*0, y : baseTop - po.common.size.height/2 + 65*6},
+        bingb  : {x : baseLeft - po.common.size.width/2 + 65*2, y : baseTop - po.common.size.height/2 + 65*6},
+        bingc  : {x : baseLeft - po.common.size.width/2 + 65*4, y : baseTop - po.common.size.height/2 + 65*6},
+        bingd  : {x : baseLeft - po.common.size.width/2 + 65*6, y : baseTop - po.common.size.height/2 + 65*6},
+        binge  : {x : baseLeft - po.common.size.width/2 + 65*8, y : baseTop - po.common.size.height/2 + 65*6},
+        paol   : {x : baseLeft - po.common.size.width/2 + 65*1, y : baseTop - po.common.size.height/2 + 65*7},
+        paor   : {x : baseLeft - po.common.size.width/2 + 65*7, y : baseTop - po.common.size.height/2 + 65*7},
+        chel   : {x : baseLeft - po.common.size.width/2 + 65*0, y : baseTop - po.common.size.height/2 + 65*9},
+        cher   : {x : baseLeft - po.common.size.width/2 + 65*8, y : baseTop - po.common.size.height/2 + 65*9},
+        mal    : {x : baseLeft - po.common.size.width/2 + 65*1, y : baseTop - po.common.size.height/2 + 65*9},
+        mar    : {x : baseLeft - po.common.size.width/2 + 65*7, y : baseTop - po.common.size.height/2 + 65*9},
+        xiangl : {x : baseLeft - po.common.size.width/2 + 65*2, y : baseTop - po.common.size.height/2 + 65*9},
+        xiangr : {x : baseLeft - po.common.size.width/2 + 65*6, y : baseTop - po.common.size.height/2 + 65*9},
+        shil   : {x : baseLeft - po.common.size.width/2 + 65*3, y : baseTop - po.common.size.height/2 + 65*9},
+        shir   : {x : baseLeft - po.common.size.width/2 + 65*5, y : baseTop - po.common.size.height/2 + 65*9},
+        shuai  : {x : baseLeft - po.common.size.width/2 + 65*4, y : baseTop - po.common.size.height/2 + 65*9}
     }
 
     function Pieces(type,name,options){
@@ -118,7 +145,17 @@ $(function(){
                     "stroke-opacity" : 1
                 });
                 mouseMoveRect.attr({
+                    x : piece.attrs.x,
+                    y : piece.attrs.y,
                     "stroke-opacity" : 1
+                });
+                $(map.node).bind("mouseover", function(e){
+                    $(this).bind("mousemove", function(e){
+                        mouseMoveRect.attr({
+                            x : e.pageX - $(this).offset().left + 15,
+                            y : e.pageY - $(this).offset().top - 15
+                        })
+                    })
                 })
                 selStatus.selected = true;
                 selStatus.id = piece.id;
@@ -132,12 +169,53 @@ $(function(){
             mouseMoveRect.attr({
                 "stroke-opacity" : 0
             })
+            $(map.node).unbind();
+        }
+        piece.node.onmousemove = function(){
+            if(selStatus.selected){
+                mouseMoveRect.attr({
+                    x : piece.attrs.x,
+                    y : piece.attrs.y
+                });
+            }else{
+
+            }
         }
         return piece;
     }
 
+    var bzua = new Pieces("black", "zu", po.black.zua).create();
+    var bzub = new Pieces("black", "zu", po.black.zub).create();
+    var bzuc = new Pieces("black", "zu", po.black.zuc).create();
+    var bzud = new Pieces("black", "zu", po.black.zud).create();
+    var bzue = new Pieces("black", "zu", po.black.zue).create();
+    var bpaol = new Pieces("black", "pao", po.black.paol).create();
+    var bpaor = new Pieces("black", "pao", po.black.paor).create();
     var bchel = new Pieces("black", "che", po.black.chel).create();
     var bcher = new Pieces("black", "che", po.black.cher).create();
+    var bmal = new Pieces("black", "ma", po.black.mal).create();
+    var bmar = new Pieces("black", "ma", po.black.mar).create();
+    var bxiangl = new Pieces("black", "xiang", po.black.xiangl).create();
+    var bxiangr = new Pieces("black", "xiang", po.black.xiangr).create();
+    var bshil = new Pieces("black", "shi", po.black.shil).create();
+    var bshir = new Pieces("black", "shi", po.black.shir).create();
+    var bjiang = new Pieces("black", "jiang", po.black.jiang).create();
+
+    var rzua = new Pieces("red", "bing", po.red.binga).create();
+    var rzub = new Pieces("red", "bing", po.red.bingb).create();
+    var rzuc = new Pieces("red", "bing", po.red.bingc).create();
+    var rzud = new Pieces("red", "bing", po.red.bingd).create();
+    var rzue = new Pieces("red", "bing", po.red.binge).create();
+    var rpaol = new Pieces("red", "pao", po.red.paol).create();
+    var rpaor = new Pieces("red", "pao", po.red.paor).create();
+    var rchel = new Pieces("red", "che", po.red.chel).create();
+    var rcher = new Pieces("red", "che", po.red.cher).create();
+    var rmal = new Pieces("red", "ma", po.red.mal).create();
+    var rmar = new Pieces("red", "ma", po.red.mar).create();
+    var rxiangl = new Pieces("red", "xiang", po.red.xiangl).create();
+    var rxiangr = new Pieces("red", "xiang", po.red.xiangr).create();
+    var rshil = new Pieces("red", "shi", po.red.shil).create();
+    var rshir = new Pieces("red", "shi", po.red.shir).create();
     var rshuai = new Pieces("red", "shuai", po.red.shuai).create();
 })
 </script>
