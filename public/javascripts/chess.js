@@ -26,7 +26,7 @@ var paper = Raphael("map", 654, 660),
     });
 
 //执棋方
-var currentOperator = "red";
+var currentOperator = null;
 
 //选棋状态
 var selStatus = {
@@ -102,7 +102,7 @@ Pieces.prototype.create = function(){
 
     //绑定棋子点击事件
     piece.node.onclick = function(e){
-        if(selStatus.operator == currentOperator){
+        if(selStatus.operator === currentOperator){
             if( (selStatus.type != null) && (piece.data("type") != selStatus.type) ){
                 paper.getById(selStatus.id).toFront().animate({
                     x : piece.attrs.x,
@@ -110,7 +110,7 @@ Pieces.prototype.create = function(){
                 },300,function(){
                     piece.remove();
                     resetSelStatus();
-                    currentOperator = currentOperator == "red" ? "black" : "red";
+                    //currentOperator = currentOperator == "red" ? "black" : "red";
                     selStatus.operator = selStatus.operator == "red" ? "black" : "red";
                 });
                 return;

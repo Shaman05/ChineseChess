@@ -12,7 +12,7 @@ function socketStart(server){
     socket.listen(server).on('connection', function (socket) {
         console.log(socket.id + " has been connected!");
 
-        socket.on('message', function(message){
+        socket.on('this client', function(message){
             socket.broadcast.emit('message', message);
         })
 

@@ -15,6 +15,11 @@
 </head>
 
 <body>
+    <div id="selPlayer">
+        <input type="radio" name="ptype" value="viewer" checked><label>观看着</label>
+        <input type="radio" name="ptype" value="black"><label>黑方</label>
+        <input type="radio" name="ptype" value="red"><label>红方</label>
+    </div>
     <div class="map" id="map"></div>
     <div class="tipwrap">
         <div class="tipbox">
@@ -38,9 +43,11 @@ $(function(){
     ws.on("connect", function(){
         console.log("connected!")
 
-        $(".block").click(function(e){
-            var id = $(e.target).attr("id");
-            ws.send(id);
+        $("#selPlayer input[type=radio]").click(function(){
+            currentOperator = $(this).val();
+            $("#selPlayer input[type=radio]").attr("disabled", true);
+            ws.emit("this client", $(this).val());
+            init();
         })
 
         ws.on("message", function(id){
@@ -52,39 +59,41 @@ $(function(){
         })
     })
 
-    var bzua = new Pieces("black", "zu", po.black.zua).create();
-    var bzub = new Pieces("black", "zu", po.black.zub).create();
-    var bzuc = new Pieces("black", "zu", po.black.zuc).create();
-    var bzud = new Pieces("black", "zu", po.black.zud).create();
-    var bzue = new Pieces("black", "zu", po.black.zue).create();
-    var bpaol = new Pieces("black", "pao", po.black.paol).create();
-    var bpaor = new Pieces("black", "pao", po.black.paor).create();
-    var bchel = new Pieces("black", "che", po.black.chel).create();
-    var bcher = new Pieces("black", "che", po.black.cher).create();
-    var bmal = new Pieces("black", "ma", po.black.mal).create();
-    var bmar = new Pieces("black", "ma", po.black.mar).create();
-    var bxiangl = new Pieces("black", "xiang", po.black.xiangl).create();
-    var bxiangr = new Pieces("black", "xiang", po.black.xiangr).create();
-    var bshil = new Pieces("black", "shi", po.black.shil).create();
-    var bshir = new Pieces("black", "shi", po.black.shir).create();
-    var bjiang = new Pieces("black", "jiang", po.black.jiang).create();
+    function init(){
+        var bzua = new Pieces("black", "zu", po.black.zua).create();
+        var bzub = new Pieces("black", "zu", po.black.zub).create();
+        var bzuc = new Pieces("black", "zu", po.black.zuc).create();
+        var bzud = new Pieces("black", "zu", po.black.zud).create();
+        var bzue = new Pieces("black", "zu", po.black.zue).create();
+        var bpaol = new Pieces("black", "pao", po.black.paol).create();
+        var bpaor = new Pieces("black", "pao", po.black.paor).create();
+        var bchel = new Pieces("black", "che", po.black.chel).create();
+        var bcher = new Pieces("black", "che", po.black.cher).create();
+        var bmal = new Pieces("black", "ma", po.black.mal).create();
+        var bmar = new Pieces("black", "ma", po.black.mar).create();
+        var bxiangl = new Pieces("black", "xiang", po.black.xiangl).create();
+        var bxiangr = new Pieces("black", "xiang", po.black.xiangr).create();
+        var bshil = new Pieces("black", "shi", po.black.shil).create();
+        var bshir = new Pieces("black", "shi", po.black.shir).create();
+        var bjiang = new Pieces("black", "jiang", po.black.jiang).create();
 
-    var rzua = new Pieces("red", "bing", po.red.binga).create();
-    var rzub = new Pieces("red", "bing", po.red.bingb).create();
-    var rzuc = new Pieces("red", "bing", po.red.bingc).create();
-    var rzud = new Pieces("red", "bing", po.red.bingd).create();
-    var rzue = new Pieces("red", "bing", po.red.binge).create();
-    var rpaol = new Pieces("red", "pao", po.red.paol).create();
-    var rpaor = new Pieces("red", "pao", po.red.paor).create();
-    var rchel = new Pieces("red", "che", po.red.chel).create();
-    var rcher = new Pieces("red", "che", po.red.cher).create();
-    var rmal = new Pieces("red", "ma", po.red.mal).create();
-    var rmar = new Pieces("red", "ma", po.red.mar).create();
-    var rxiangl = new Pieces("red", "xiang", po.red.xiangl).create();
-    var rxiangr = new Pieces("red", "xiang", po.red.xiangr).create();
-    var rshil = new Pieces("red", "shi", po.red.shil).create();
-    var rshir = new Pieces("red", "shi", po.red.shir).create();
-    var rshuai = new Pieces("red", "shuai", po.red.shuai).create();
+        var rbinga = new Pieces("red", "bing", po.red.binga).create();
+        var rbingb = new Pieces("red", "bing", po.red.bingb).create();
+        var rbingc = new Pieces("red", "bing", po.red.bingc).create();
+        var rbingd = new Pieces("red", "bing", po.red.bingd).create();
+        var rbinge = new Pieces("red", "bing", po.red.binge).create();
+        var rpaol = new Pieces("red", "pao", po.red.paol).create();
+        var rpaor = new Pieces("red", "pao", po.red.paor).create();
+        var rchel = new Pieces("red", "che", po.red.chel).create();
+        var rcher = new Pieces("red", "che", po.red.cher).create();
+        var rmal = new Pieces("red", "ma", po.red.mal).create();
+        var rmar = new Pieces("red", "ma", po.red.mar).create();
+        var rxiangl = new Pieces("red", "xiang", po.red.xiangl).create();
+        var rxiangr = new Pieces("red", "xiang", po.red.xiangr).create();
+        var rshil = new Pieces("red", "shi", po.red.shil).create();
+        var rshir = new Pieces("red", "shi", po.red.shir).create();
+        var rshuai = new Pieces("red", "shuai", po.red.shuai).create();
+    };
 
     var mapArr = [
         [],
