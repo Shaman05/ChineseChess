@@ -25,8 +25,12 @@ var paper = Raphael("map", 654, 660),
         "stroke-opacity" : 0
     });
 
+//执棋方
+var currentOperator = "red";
+
 //选棋状态
 var selStatus = {
+    operator : "red",
     selected : false,
     id : 1,
     type : null
@@ -98,42 +102,46 @@ Pieces.prototype.create = function(){
 
     //绑定棋子点击事件
     piece.node.onclick = function(e){
-        if( (selStatus.type != null) && (piece.data("type") != selStatus.type) ){
-            paper.getById(selStatus.id).toFront().animate({
-                x : piece.attrs.x,
-                y : piece.attrs.y
-            },300,function(){
-                piece.remove();
-                resetSelStatus();
-            });
-            return;
-        }
-        if( (!selStatus.selected && selStatus.id != piece.id) || (selStatus.selected && selStatus.id != piece.id) ){
-            selectRect.attr({
-                x : piece.attrs.x,
-                y : piece.attrs.y,
-                "stroke-opacity" : 1
-            });
-            mouseMoveRect.attr({
-                x : piece.attrs.x,
-                y : piece.attrs.y,
-                "stroke-opacity" : 1
-            });
-            $(map.node).bind("mouseover", function(e){
-                $(this).bind("mousemove", function(e){
-                    mouseMoveRect.attr({
-                        x : e.pageX - $(this).offset().left + 15,
-                        y : e.pageY - $(this).offset().top - 15
+        if(selStatus.operator == currentOperator){
+            if( (selStatus.type != null) && (piece.data("type") != selStatus.type) ){
+                paper.getById(selStatus.id).toFront().animate({
+                    x : piece.attrs.x,
+                    y : piece.attrs.y
+                },300,function(){
+                    piece.remove();
+                    resetSelStatus();
+                    currentOperator = currentOperator == "red" ? "black" : "red";
+                    selStatus.operator = selStatus.operator == "red" ? "black" : "red";
+                });
+                return;
+            }
+            if( (!selStatus.selected && selStatus.id != piece.id) || (selStatus.selected && selStatus.id != piece.id) ){
+                selectRect.attr({
+                    x : piece.attrs.x,
+                    y : piece.attrs.y,
+                    "stroke-opacity" : 1
+                });
+                mouseMoveRect.attr({
+                    x : piece.attrs.x,
+                    y : piece.attrs.y,
+                    "stroke-opacity" : 1
+                });
+                $(map.node).bind("mouseover", function(e){
+                    $(this).bind("mousemove", function(e){
+                        mouseMoveRect.attr({
+                            x : e.pageX - $(this).offset().left + 15,
+                            y : e.pageY - $(this).offset().top - 15
+                        })
                     })
                 })
-            })
-            selStatus.selected = true;
-            selStatus.id = piece.id;
-            selStatus.type = piece.data("type");
-            return;
+                selStatus.selected = true;
+                selStatus.id = piece.id;
+                selStatus.type = piece.data("type");
+                return;
+            }
+            resetSelStatus();
+            $(map.node).unbind();
         }
-        resetSelStatus();
-        $(map.node).unbind();
     }
 
     //绑定棋子hover事件

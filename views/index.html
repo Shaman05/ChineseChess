@@ -30,6 +30,7 @@
 </html>
 <script type="text/javascript" src="/javascripts/jquery.js"></script>
 <script type="text/javascript" src="/javascripts/raphael-min.js"></script>
+<script type="text/javascript" src="/javascripts/chess.js"></script>
 <script type="text/javascript" src="/socket.io/socket.io.js"></script>
 <script type="text/javascript">
 $(function(){
@@ -85,5 +86,18 @@ $(function(){
     var rshir = new Pieces("red", "shi", po.red.shir).create();
     var rshuai = new Pieces("red", "shuai", po.red.shuai).create();
 
+    var mapArr = [
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        []
+    ]
 })
 </script>
