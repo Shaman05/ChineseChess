@@ -10,10 +10,21 @@ var socket = require('socket.io');
 
 function socketStart(server){
     socket.listen(server).on('connection', function (socket) {
-        console.log(socket.id + " has been connected!");
+        var gc = {
+            red : false,
+            black : false
+        }
 
-        socket.on('this client', function(message){
-            socket.broadcast.emit('message', message);
+        socket.on('select color', function(color){
+            if(gc[color]){
+
+                return;
+            }
+            gc[color] = true;
+        })
+
+        socket.on('ready', function(){
+
         })
 
         socket.on('disconnect', function(){

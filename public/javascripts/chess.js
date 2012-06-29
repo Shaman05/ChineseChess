@@ -8,6 +8,8 @@
 
 //偏移量
 var offset = {dx : 50, dy : 20};
+var baseLeft = offset.dx - 31 + 15,
+    baseTop = offset.dy - 31 + 16;
 
 //初始化棋盘
 var paper = Raphael("map", 654, 660),
@@ -17,16 +19,12 @@ var paper = Raphael("map", 654, 660),
         "stroke" : "red",
         "stroke-width" : 1,
         "stroke-opacity" : 0
-    }),
-    mouseMoveRect = paper.rect(0, 0, 62, 62).attr({
-        "stroke" : "red",
-        "stroke-width" : 1,
-        "stroke-dasharray" : "- ",
-        "stroke-opacity" : 0
     });
+var mapRect = [];
+initRect();
 
 //执棋方
-var currentOperator = null;
+var currentOperator = "red";
 
 //选棋状态
 var selStatus = {
@@ -42,49 +40,49 @@ var po = {};
     //公用属性
     po.common = {
         size : {width : 62, height : 62},
-        style : {"cursor" : "pointer"}
+        style : {
+            "cursor" : "pointer"
+        }
     };
 
-var baseLeft = offset.dx - po.common.size.width/2 + 15,
-    baseTop = offset.dy - po.common.size.height/2 + 16;
     //黑棋初始化位置
     po.black = {
-        zua    : {x : baseLeft + 65*0, y : baseTop + 65*3},
-        zub    : {x : baseLeft + 65*2, y : baseTop + 65*3},
-        zuc    : {x : baseLeft + 65*4, y : baseTop + 65*3},
-        zud    : {x : baseLeft + 65*6, y : baseTop + 65*3},
-        zue    : {x : baseLeft + 65*8, y : baseTop + 65*3},
-        paol   : {x : baseLeft + 65*1, y : baseTop + 65*2},
-        paor   : {x : baseLeft + 65*7, y : baseTop + 65*2},
-        chel   : {x : baseLeft + 65*0, y : baseTop + 65*0},
-        cher   : {x : baseLeft + 65*8, y : baseTop + 65*0},
-        mal    : {x : baseLeft + 65*1, y : baseTop + 65*0},
-        mar    : {x : baseLeft + 65*7, y : baseTop + 65*0},
-        xiangl : {x : baseLeft + 65*2, y : baseTop + 65*0},
-        xiangr : {x : baseLeft + 65*6, y : baseTop + 65*0},
-        shil   : {x : baseLeft + 65*3, y : baseTop + 65*0},
-        shir   : {x : baseLeft + 65*5, y : baseTop + 65*0},
-        jiang  : {x : baseLeft + 65*4, y : baseTop + 65*0}
+        zua    : {x : 0, y : 3},
+        zub    : {x : 2, y : 3},
+        zuc    : {x : 4, y : 3},
+        zud    : {x : 6, y : 3},
+        zue    : {x : 8, y : 3},
+        paol   : {x : 1, y : 2},
+        paor   : {x : 7, y : 2},
+        chel   : {x : 0, y : 0},
+        cher   : {x : 8, y : 0},
+        mal    : {x : 1, y : 0},
+        mar    : {x : 7, y : 0},
+        xiangl : {x : 2, y : 0},
+        xiangr : {x : 6, y : 0},
+        shil   : {x : 3, y : 0},
+        shir   : {x : 5, y : 0},
+        jiang  : {x : 4, y : 0}
     }
 
     //红棋初始化位置
     po.red = {
-        binga  : {x : baseLeft + 65*0, y : baseTop + 65*6},
-        bingb  : {x : baseLeft + 65*2, y : baseTop + 65*6},
-        bingc  : {x : baseLeft + 65*4, y : baseTop + 65*6},
-        bingd  : {x : baseLeft + 65*6, y : baseTop + 65*6},
-        binge  : {x : baseLeft + 65*8, y : baseTop + 65*6},
-        paol   : {x : baseLeft + 65*1, y : baseTop + 65*7},
-        paor   : {x : baseLeft + 65*7, y : baseTop + 65*7},
-        chel   : {x : baseLeft + 65*0, y : baseTop + 65*9},
-        cher   : {x : baseLeft + 65*8, y : baseTop + 65*9},
-        mal    : {x : baseLeft + 65*1, y : baseTop + 65*9},
-        mar    : {x : baseLeft + 65*7, y : baseTop + 65*9},
-        xiangl : {x : baseLeft + 65*2, y : baseTop + 65*9},
-        xiangr : {x : baseLeft + 65*6, y : baseTop + 65*9},
-        shil   : {x : baseLeft + 65*3, y : baseTop + 65*9},
-        shir   : {x : baseLeft + 65*5, y : baseTop + 65*9},
-        shuai  : {x : baseLeft + 65*4, y : baseTop + 65*9}
+        binga  : {x : 0, y : 6},
+        bingb  : {x : 2, y : 6},
+        bingc  : {x : 4, y : 6},
+        bingd  : {x : 6, y : 6},
+        binge  : {x : 8, y : 6},
+        paol   : {x : 1, y : 7},
+        paor   : {x : 7, y : 7},
+        chel   : {x : 0, y : 9},
+        cher   : {x : 8, y : 9},
+        mal    : {x : 1, y : 9},
+        mar    : {x : 7, y : 9},
+        xiangl : {x : 2, y : 9},
+        xiangr : {x : 6, y : 9},
+        shil   : {x : 3, y : 9},
+        shir   : {x : 5, y : 9},
+        shuai  : {x : 4, y : 9}
     }
 
 //棋子类
@@ -98,7 +96,11 @@ Pieces.prototype.create = function(){
     var posit = this.options,
         size = po.common.size;
     var img = this.type + "_" + this.name +".png";
-    var piece = paper.image("../images/" + img, posit.x, posit.y, size.width, size.height).attr(po.common.style).data("type",this.type);;
+    var piece = paper.image("../images/" + img, baseLeft + posit.x*65, baseTop + posit.y*65, size.width, size.height)
+                        .attr(po.common.style)
+                        .data("name",this.name)
+                        .data("type",this.type)
+                        .data("posit",{x : posit.x, y : posit.y});
 
     //绑定棋子点击事件
     piece.node.onclick = function(e){
@@ -108,10 +110,23 @@ Pieces.prototype.create = function(){
                     x : piece.attrs.x,
                     y : piece.attrs.y
                 },300,function(){
+                    var i = piece.data("posit").x,
+                        j = piece.data("posit").y;
+                    mapRect[j][i].attr({"stroke-opacity" : 0});
+                    var oA = paper.getById(selStatus.id).data("posit").x + 1;
+                    var oB = j - paper.getById(selStatus.id).data("posit").y > 0 ? j - paper.getById(selStatus.id).data("posit").y : paper.getById(selStatus.id).data("posit").y - j;
+                    paper.getById(selStatus.id).data("posit",{
+                        x : i,
+                        y : j
+                    });
+                    var otype = paper.getById(selStatus.id).data("type"),
+                        oname = paper.getById(selStatus.id).data("name");
+                    $("<option>" + otype + ":" + oname + oA + "进" + oB + "</option>").prependTo($("#recode"));
                     piece.remove();
                     resetSelStatus();
+
                     //currentOperator = currentOperator == "red" ? "black" : "red";
-                    selStatus.operator = selStatus.operator == "red" ? "black" : "red";
+                    //selStatus.operator = selStatus.operator == "red" ? "black" : "red";
                 });
                 return;
             }
@@ -121,19 +136,6 @@ Pieces.prototype.create = function(){
                     y : piece.attrs.y,
                     "stroke-opacity" : 1
                 });
-                mouseMoveRect.attr({
-                    x : piece.attrs.x,
-                    y : piece.attrs.y,
-                    "stroke-opacity" : 1
-                });
-                $(map.node).bind("mouseover", function(e){
-                    $(this).bind("mousemove", function(e){
-                        mouseMoveRect.attr({
-                            x : e.pageX - $(this).offset().left + 15,
-                            y : e.pageY - $(this).offset().top - 15
-                        })
-                    })
-                })
                 selStatus.selected = true;
                 selStatus.id = piece.id;
                 selStatus.type = piece.data("type");
@@ -146,16 +148,73 @@ Pieces.prototype.create = function(){
 
     //绑定棋子hover事件
     piece.node.onmouseover = function(){
-        if(selStatus.selected){
-            mouseMoveRect.attr({
-                x : piece.attrs.x,
-                y : piece.attrs.y
-            });
-        }else{
-            //
+        if(selStatus.selected && (piece.data("type") !== paper.getById(selStatus.id).data("type"))){
+            var i = piece.data("posit").x,
+                j = piece.data("posit").y;
+            mapRect[j][i].attr({"stroke-opacity" : 1})
         }
     }
+    piece.node.onmouseout = function(){
+        var i = piece.data("posit").x,
+            j = piece.data("posit").y;
+        mapRect[j][i].attr({"stroke-opacity" : 0})
+    }
     return piece;
+}
+
+//构建方阵
+function initRect(){
+    for(var i = 0 ; i < 10 ; i++){
+        mapRect[i] = [];
+        for(var j = 0 ; j < 9 ; j ++){
+            var x = baseLeft + 65*j,
+                y = baseTop + 65*i;
+            var rect = paper.rect(x, y, 62, 62).attr({
+                "fill" : "green",
+                "fill-opacity" :.05,
+                "stroke" : "red",
+                "stroke-width" : 1,
+                "stroke-dasharray" : "- ",
+                "stroke-opacity" : 0
+            });
+            $(rect.node).data("posit",{
+                x : j,
+                y : i
+            });
+            mapRect[i].push(rect);
+            rect.node.onmouseover = function(){
+                if(selStatus.selected){
+                    $(this)[0].style.strokeOpacity = 1;
+                    $(this)[0].style.cursor = "pointer";
+                }
+            };
+            rect.node.onmouseout = function(){
+                $(this)[0].style.strokeOpacity = 0;
+                $(this)[0].style.cursor = "default";
+            };
+            rect.node.onclick = function(){
+                if(selStatus.selected){
+                    var oA = paper.getById(selStatus.id).data("posit").x + 1;
+                    var oB = $(this).data("posit").y - paper.getById(selStatus.id).data("posit").y > 0 ? $(this).data("posit").y - paper.getById(selStatus.id).data("posit").y : paper.getById(selStatus.id).data("posit").y - $(this).data("posit").y;
+                    var otype = paper.getById(selStatus.id).data("type"),
+                        oname = paper.getById(selStatus.id).data("name");
+                    paper.getById(selStatus.id).toFront().animate({
+                        x : $(this)[0].attributes.x.value,
+                        y : $(this)[0].attributes.y.value
+                    },300,function(){
+
+                        $("<option>" + otype + ":" + oname + oA + "进" + oB + "</option>").prependTo($("#recode"));
+                        resetSelStatus();
+                        //currentOperator = currentOperator == "red" ? "black" : "red";
+                        //selStatus.operator = selStatus.operator == "red" ? "black" : "red";
+                    }).data("posit",{
+                        x : $(this).data("posit").x,
+                        y : $(this).data("posit").y
+                    });
+                }
+            }
+        }
+    }
 }
 
 //重置选棋方法
@@ -163,9 +222,6 @@ function resetSelStatus(){
     selectRect.attr({
         "stroke-opacity" : 0
     });
-    mouseMoveRect.attr({
-        "stroke-opacity" : 0
-    })
     selStatus.selected = false;
     selStatus.id = 1;
     selStatus.type = null;
