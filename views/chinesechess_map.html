@@ -101,8 +101,8 @@
 
         for(var i = 0; i < 9; i++){
             var dx = DATA.map.offsetLeft + DATA.pieces.size*i;
-            map.text(dx, 20, DATA.text.NumA[i]).attr(DATA.style.number);
-            map.text(dx, 530, DATA.text.NumB[i]).attr(DATA.style.number);
+            map.text(dx, 20, DATA.text.Num[0][i]).attr(DATA.style.number);
+            map.text(dx, 530, DATA.text.Num[1][i]).attr(DATA.style.number);
         }
 
         for(var i = 0; i < 10; i++){

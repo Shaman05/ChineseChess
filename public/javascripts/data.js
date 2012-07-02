@@ -24,16 +24,17 @@ var DATA = {
             blackPrefix : 'black_'
         },
         array : [
-            ["red_che"   , "red_ma"    , "red_xiang"   , "red_shi"   , "red_shuai"   , "red_shi"   , "red_xiang"   , "red_ma"    , "red_che"  ],
+            ["black_che" , "black_ma"  , "black_xiang" , "black_shi" , "black_jiang" , "black_shi" , "black_xiang" , "black_ma"  , "black_che"],
             [null        , null        , null          , null        , null          , null        , null          , null        , null       ],
-            [null        , "red_pao"   , null          , null        , null          , null        , null          , "red_pao"   , null       ],
-            ["red_bing"  , null        , "red_bing"    , null        , "red_bing"    , null        , "red_bing"    , null        , "red_bing" ],
-            [null        , null        , null          , null        , null          , null        , null          , null        , null       ],
-            [null        , null        , null          , null        , null          , null        , null          , null        , null       ],
-            ["black_zu"  , null        , "black_zu"    , null        , "black_zu"    , null        , "black_zu"    , null        , "black_zu" ],
             [null        , "black_pao" , null          , null        , null          , null        , null          , "black_pao" , null       ],
+            ["black_zu"  , null        , "black_zu"    , null        , "black_zu"    , null        , "black_zu"    , null        , "black_zu" ],
             [null        , null        , null          , null        , null          , null        , null          , null        , null       ],
-            ["black_che" , "black_ma"  , "black_xiang" , "black_shi" , "black_jiang" , "black_shi" , "black_xiang" , "black_ma"  , "black_che"]
+            [null        , null        , null          , null        , null          , null        , null          , null        , null       ],
+            ["red_bing"  , null        , "red_bing"    , null        , "red_bing"    , null        , "red_bing"    , null        , "red_bing" ],
+            [null        , "red_pao"   , null          , null        , null          , null        , null          , "red_pao"   , null       ],
+            [null        , null        , null          , null        , null          , null        , null          , null        , null       ],
+            ["red_che"   , "red_ma"    , "red_xiang"   , "red_shi"   , "red_shuai"   , "red_shi"   , "red_xiang"   , "red_ma"    , "red_che"  ]
+
         ]
     },
     style : {
@@ -73,7 +74,9 @@ var DATA = {
     text : {
         CH : "楚 河",
         HJ : "汉 界",
-        NumA : ["1","2","3","4","5","6","7","8","9"],
-        NumB : ["一","二","三","四","五","六","七","八","九"]
+        Num : [
+            ["1","2","3","4","5","6","7","8","9"],
+            ["九","八","七","六","五","四","三","二","一"]
+        ]
     }
 };
