@@ -7,6 +7,8 @@ var express = require('express')
   , routes = require('./routes')
   , socket = require('./socket');
 
+var util = require('util');
+
 var app = module.exports = express.createServer();
 
 // Configuration
@@ -41,4 +43,7 @@ var host = (process.env.VCAP_APP_HOST || 'localhost');
 
 app.listen(port, host, function(){
     console.log("Express started at " + host + ":" + port);
+    console.log("Process pid : " + process.pid);
+    console.log("Process platform : " + process.platform);
+    console.log("Process memoryUsage: " + util.inspect(process.memoryUsage()));
 });
