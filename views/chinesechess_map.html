@@ -6,49 +6,26 @@
 </head>
 
 <body>
-<div id="chess_map" style="width: 500px; height: 550px"></div>
-<script type="text/javascript" src="js/raphael.js"></script>
+<div id="chess_map" style="width: 500px; height: 550px; background: #d1bf9a; position:absolute; top:50%; left:50%; margin:-275px 0 0 -250px"></div>
+<script type="text/javascript" src="../public/javascripts/raphael-min.js"></script>
+<script type="text/javascript" src="../public/javascripts/chess_nnn.js"></script>
+<script type="text/javascript" src="../public/javascripts/data.js"></script>
 <script type="text/javascript">
-    var DATA = {
-        map : {
-            size : {
-                width : 500,
-                height : 450
-            },
-            offsetTop : 25,
-            offsetLeft : 25
-        },
-        pieces : {
-            size : 50,
-            img : {
-                url : '../images/',
-                redPrefix : 'red_',
-                blackPrefix : 'black_'
-            }
-        },
-        style : {
-            stroke : {
-                "stroke" : "black",
-                "stroke-width" : .5
-            },
-            backLayer : {
-                "fill" : "none"
-            }
-        }
-    };
-
-    var map = Raphael("chess_map", DATA.map.size.height, DATA.map.size.width);
-    var backLayer = map.rect(DATA.map.offsetLeft-4, DATA.map.offsetTop-4, DATA.map.size.height-42, DATA.map.size.width-42).attr({"stroke-width" : 1}).attr(DATA.style.backLayer);
-    var wrap = map.rect(DATA.map.offsetLeft, DATA.map.offsetTop, DATA.map.size.height-50, DATA.map.size.width-50).attr(DATA.style.stroke).attr({"fill" : "none"});
-
+    var map = Raphael("chess_map", DATA.map.size.width, DATA.map.size.height);
     DrawMap();
 
     function DrawMap(){
+        var backLayer = map.rect(DATA.map.offsetLeft-4, DATA.map.offsetTop-4, DATA.map.size.width-92, DATA.map.size.height-92)
+                            .attr({"stroke-width" : 1}).attr(DATA.style.backLayer);
+        var wrap = map.rect(DATA.map.offsetLeft, DATA.map.offsetTop, DATA.map.size.width-100, DATA.map.size.height-100)
+                        .attr(DATA.style.stroke).attr({"fill" : "none"});
+
         for(var i = 0; i < 9; i++){
             for(var j = 0; j < 8; j++){
                 DrawRectUnit(DATA.map.offsetLeft + DATA.pieces.size*j, DATA.map.offsetTop + DATA.pieces.size*i, DATA.pieces.size, DATA.pieces.size);
             }
         }
+
         var ox = DATA.map.offsetLeft + DATA.pieces.size*3,
             oy = DATA.map.offsetTop,
             ex = DATA.map.offsetLeft + DATA.pieces.size*5,
@@ -58,11 +35,83 @@
             line.clone().transform("t0,350");
             line.clone().transform("t0,350r90");
 
+        var slineA = map.path("M103,141V147H110"),
+            slineB = map.path("M97,141V147H90");
+            slineA.clone().transform("t-13,12r180");
+            slineB.clone().transform("t13,12r180");
+            slineA.clone().transform("t300,0");
+            slineB.clone().transform("t300,0");
+            slineA.clone().transform("t287,12r180");
+            slineB.clone().transform("t313,12r180");
+
+            slineA.clone().transform("t0,250");
+            slineB.clone().transform("t0,250");
+            slineA.clone().transform("t-13,262r180");
+            slineB.clone().transform("t13,262r180");
+            slineA.clone().transform("t300,250");
+            slineB.clone().transform("t300,250");
+            slineA.clone().transform("t287,262r180");
+            slineB.clone().transform("t313,262r180");
+
+            slineA.clone().transform("t-50,50");
+            slineB.clone().transform("t-37,62r180");
+
+            slineA.clone().transform("t50,50");
+            slineB.clone().transform("t63,62r180");
+            slineA.clone().transform("t37,62r180");
+            slineB.clone().transform("t50,50");
+
+            slineA.clone().transform("t150,50");
+            slineB.clone().transform("t163,62r180");
+            slineA.clone().transform("t137,62r180");
+            slineB.clone().transform("t150,50");
+
+            slineA.clone().transform("t250,50");
+            slineB.clone().transform("t263,62r180");
+            slineA.clone().transform("t237,62r180");
+            slineB.clone().transform("t250,50");
+
+            slineA.clone().transform("t337,62r180");
+            slineB.clone().transform("t350,50");
+
+            slineA.clone().transform("t-50,200");
+            slineB.clone().transform("t-37,212r180");
+
+            slineA.clone().transform("t50,200");
+            slineB.clone().transform("t63,212r180");
+            slineA.clone().transform("t37,212r180");
+            slineB.clone().transform("t50,200");
+
+            slineA.clone().transform("t150,200");
+            slineB.clone().transform("t163,212r180");
+            slineA.clone().transform("t137,212r180");
+            slineB.clone().transform("t150,200");
+
+            slineA.clone().transform("t250,200");
+            slineB.clone().transform("t263,212r180");
+            slineA.clone().transform("t237,212r180");
+            slineB.clone().transform("t250,200");
+
+            slineA.clone().transform("t337,212r180");
+            slineB.clone().transform("t350,200");
+
+        map.rect(DATA.map.offsetLeft, DATA.map.offsetTop + DATA.pieces.size*4, DATA.map.size.width-100, 50).attr(DATA.style.limit);
+        map.text(150, 275, DATA.text.CH).attr(DATA.style.text);
+        map.text(350, 275, DATA.text.HJ).attr(DATA.style.text);
+
+        for(var i = 0; i < 9; i++){
+            var dx = DATA.map.offsetLeft + DATA.pieces.size*i;
+            map.text(dx, 20, DATA.text.NumA[i]).attr(DATA.style.number);
+            map.text(dx, 530, DATA.text.NumB[i]).attr(DATA.style.number);
+        }
+
         for(var i = 0; i < 10; i++){
             for(var j = 0; j < 9; j++){
-                DrawPieces(DATA.map.offsetLeft-25 + DATA.pieces.size*j, DATA.map.offsetTop-25 + DATA.pieces.size*i, DATA.pieces.size, DATA.pieces.size);
+                DrawPiecesRect(DATA.map.offsetLeft-25 + DATA.pieces.size*j + 5, DATA.map.offsetTop-25 + DATA.pieces.size*i + 5, DATA.pieces.size-10, DATA.pieces.size-10);
             }
         }
+
+        DrawPieces();
     }
 
     //单元格绘制
@@ -70,13 +119,37 @@
         var rect = map.rect(x, y, size, size).attr(DATA.style.stroke).attr({"fill" : "none"});
     }
 
+    //棋子单元格绘制
+    function DrawPiecesRect(x, y, size){
+        var rect = map.rect(x, y, size, size).attr(DATA.style.rectUnit);
+        rect.node.onmouseover = function(){
+            rect.attr({"stroke-opacity" : 1});
+        }
+        rect.node.onmouseout = function(){
+            rect.attr({"stroke-opacity" : 0});
+        }
+    }
+
     //棋子绘制
-    function DrawPieces(x, y, size){
-        var rect = map.rect(x, y, size, size).attr({
-            "fill" : "blue",
-            "fill-opacity" :.3,
-            "stroke-width" : 1
-        });
+    function DrawPieces(){
+        var arr = DATA.pieces.array;
+        for(var i = 0, len = arr.length; i < len; i++){
+            var row = arr[i];
+            for(var j = 0, _len = row.length; j < _len; j++){
+                if(row[j]){
+                    var d = row[j].split("_");
+                    var data = {
+                        type : d[0],
+                        name : d[1],
+                        posit : {
+                            x : 30 + 50*j,
+                            y : 30 + 50*i
+                        }
+                    }
+                    new _Pieces(data).init();
+                }
+            }
+        }
     }
 </script>
 </body>
