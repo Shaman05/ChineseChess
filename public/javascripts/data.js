@@ -13,7 +13,8 @@ var DATA = {
             height : 550
         },
         offsetTop : 50,
-        offsetLeft : 50
+        offsetLeft : 50,
+        mapArr : []
     },
     pieces : {
         size : 50,
@@ -40,7 +41,8 @@ var DATA = {
     style : {
         stroke : {
             "stroke" : "black",
-            "stroke-width" : .5
+            "stroke-width" : .5,
+            "fill" : "none"
         },
         backLayer : {
             "fill" : "none"
@@ -62,7 +64,7 @@ var DATA = {
             "fill" : "#d1bf9a",
             "fill-opacity" : 0,
             "cursor" : "pointer",
-            "stroke" : "red",
+            "stroke" : "green",
             "stroke-dasharray" : "--",
             "stroke-width" : .5,
             "stroke-opacity" : 0
@@ -78,5 +80,9 @@ var DATA = {
             ["1","2","3","4","5","6","7","8","9"],
             ["九","八","七","六","五","四","三","二","一"]
         ]
+    },
+    select : {
+        operator : null,
+        id : null
     }
 };
