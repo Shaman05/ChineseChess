@@ -10,25 +10,18 @@
 var http = require("http");
 var fs = require("fs");
 var url = require("url");
+var path = require("path");
+var mine = require("./mime");
 
 http.createServer(function(req, res){
-    var filename = url.parse(req.url).pathname;
-    console.log(filename);
-    fs.readFile(__dirname + "/static/js/data.js", "utf8", function(err, content){
+    var pathname = url.parse(req.url).pathname;
+    var ext = path.extname(pathname) || "unknow";
+    fs.readFile(__dirname + pathname, "binary", function(err, content){
         if(!err){
             res.writeHead(200, {
-                'Content-Type': 'text/javascript'
+                'Content-Type': mine.types[ext]
             });
-            res.write(content);
-            res.end();
-        }
-    })
-    fs.readFile(__dirname + "/views/test.html", "utf8", function(err, content){
-        if(!err){
-            res.writeHead(200, {
-                'Content-Type': 'text/html'
-            });
-            res.write(content);
+            res.write(content,"binary");
             res.end();
         }
     });
