@@ -1,0 +1,184 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>中国象棋 - 绘制棋盘</title>
+</head>
+
+<body>
+<div id="chess_map" style="width: 500px; height: 550px; background: #d1bf9a; position:absolute; top:50%; left:50%; margin:-275px 0 0 -250px"></div>
+<script type="text/javascript" src="../static/js/raphael-min.js"></script>
+<script type="text/javascript" src="../static/js/chess.js"></script>
+<script type="text/javascript" src="../static/js/data.js"></script>
+<script type="text/javascript">
+    var map = Raphael("chess_map", DATA.map.size.width, DATA.map.size.height);
+    var io = null;
+    (function(map, io){
+        var type = "red";
+
+        //如果是黑方，则需要反转棋盘
+        if(type === "black"){
+            DATA.pieces.array.reverse();
+            DATA.text.Num.reverse();
+            DATA.text.Num[0].reverse();
+            DATA.text.Num[1].reverse();
+        }
+
+        MapInit();
+
+        function MapInit(){
+            var offsetLeft = DATA.map.offsetLeft,
+                offsetTop = DATA.map.offsetTop,
+                mw = DATA.map.size.width,
+                mh = DATA.map.size.height,
+                rectUnitSize = DATA.pieces.size,
+                realSize = DATA.pieces.realSize;
+
+            //基础棋盘绘制
+            map.rect(offsetLeft-4, offsetTop-4, mw-92, mh-92)
+                .attr({"stroke-width" : 1}).attr(DATA.style.backLayer);
+            map.rect(offsetLeft, offsetTop, mw-100, mh-100)
+                .attr(DATA.style.stroke);
+            for(var i = 0; i < 9; i++){
+                for(var j = 0; j < 8; j++){
+                    map.rect(offsetLeft + rectUnitSize*j, offsetTop + rectUnitSize*i, rectUnitSize, rectUnitSize)
+                        .attr(DATA.style.stroke);
+                }
+            }
+
+            //士位、炮、兵、卒位置短线绘制
+            var ox = offsetLeft + rectUnitSize*3,
+                oy = offsetTop,
+                ex = offsetLeft + rectUnitSize*5,
+                ey = offsetTop + rectUnitSize*2;
+            var line = map.path("M" + ox + " " + oy + "L" + ex + " " + ey);
+                line.clone().transform("r90");
+                line.clone().transform("t0,350");
+                line.clone().transform("t0,350r90");
+
+            var slineA = map.path("M103,141V147H110"),
+                slineB = map.path("M97,141V147H90");
+                slineA.clone().transform("t-13,12r180");
+                slineB.clone().transform("t13,12r180");
+                slineA.clone().transform("t300,0");
+                slineB.clone().transform("t300,0");
+                slineA.clone().transform("t287,12r180");
+                slineB.clone().transform("t313,12r180");
+
+                slineA.clone().transform("t0,250");
+                slineB.clone().transform("t0,250");
+                slineA.clone().transform("t-13,262r180");
+                slineB.clone().transform("t13,262r180");
+                slineA.clone().transform("t300,250");
+                slineB.clone().transform("t300,250");
+                slineA.clone().transform("t287,262r180");
+                slineB.clone().transform("t313,262r180");
+
+                slineA.clone().transform("t-50,50");
+                slineB.clone().transform("t-37,62r180");
+
+                slineA.clone().transform("t50,50");
+                slineB.clone().transform("t63,62r180");
+                slineA.clone().transform("t37,62r180");
+                slineB.clone().transform("t50,50");
+
+                slineA.clone().transform("t150,50");
+                slineB.clone().transform("t163,62r180");
+                slineA.clone().transform("t137,62r180");
+                slineB.clone().transform("t150,50");
+
+                slineA.clone().transform("t250,50");
+                slineB.clone().transform("t263,62r180");
+                slineA.clone().transform("t237,62r180");
+                slineB.clone().transform("t250,50");
+
+                slineA.clone().transform("t337,62r180");
+                slineB.clone().transform("t350,50");
+
+                slineA.clone().transform("t-50,200");
+                slineB.clone().transform("t-37,212r180");
+
+                slineA.clone().transform("t50,200");
+                slineB.clone().transform("t63,212r180");
+                slineA.clone().transform("t37,212r180");
+                slineB.clone().transform("t50,200");
+
+                slineA.clone().transform("t150,200");
+                slineB.clone().transform("t163,212r180");
+                slineA.clone().transform("t137,212r180");
+                slineB.clone().transform("t150,200");
+
+                slineA.clone().transform("t250,200");
+                slineB.clone().transform("t263,212r180");
+                slineA.clone().transform("t237,212r180");
+                slineB.clone().transform("t250,200");
+
+                slineA.clone().transform("t337,212r180");
+                slineB.clone().transform("t350,200");
+
+            //楚河、汉界绘制
+            map.rect(offsetLeft, offsetTop + rectUnitSize*4, rectUnitSize*8, rectUnitSize).attr(DATA.style.limit);
+            map.text(150, 275, DATA.text.CH).attr(DATA.style.text);
+            map.text(350, 275, DATA.text.HJ).attr(DATA.style.text);
+
+            //红黑方数字
+            for(var i = 0; i < 9; i++){
+                var dx = offsetLeft + rectUnitSize*i;
+                map.text(dx, 20, DATA.text.Num[0][i]).attr(DATA.style.number);
+                map.text(dx, 530, DATA.text.Num[1][i]).attr(DATA.style.number);
+            }
+
+            //棋子单元格绘制
+            for(var i = 0; i < 10; i++){
+                DATA.map.mapArr[i] = [];
+                for(var j = 0; j < 9; j++){
+                    var unit = DrawPiecesRect(offsetLeft-25 + rectUnitSize*j + 5, offsetTop-25 + rectUnitSize*i + 5, realSize, realSize);
+                    DATA.map.mapArr[i].push(unit);
+                }
+            }
+
+            //棋子绘制
+            DrawPieces();
+        }
+
+        function DrawPiecesRect(x, y, size){
+            var rect = map.rect(x, y, size, size).attr(DATA.style.rectUnit);
+            rect.node.onmouseover = function(){
+                rect.attr({"stroke-opacity" : 1});
+            }
+            rect.node.onmouseout = function(){
+                rect.attr({"stroke-opacity" : 0});
+            }
+
+            return rect;
+        }
+
+        function DrawPieces(){
+            var arr = DATA.pieces.array;
+            for(var i = 0, len = arr.length; i < len; i++){
+                var row = arr[i];
+                for(var j = 0, _len = row.length; j < _len; j++){
+                    if(row[j]){
+                        var d = row[j].split("_");
+                        var data = {
+                            type : d[0],
+                            name : d[1],
+                            index : {
+                                x : j,
+                                y : i
+                            },
+                            posit : {
+                                x : 30 + DATA.pieces.size*j,
+                                y : 30 + DATA.pieces.size*i
+                            }
+                        }
+                        new _Pieces(data).init();
+                    }
+                }
+            }
+        }
+
+    })(map, io)
+</script>
+</body>
+</html>
